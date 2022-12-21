@@ -1,5 +1,7 @@
 name: Check pods in SA
 on: push
+  schedule:
+    - cron: "* */12 * * *"
 jobs:
   build:
     runs-on: ubuntu-latest
