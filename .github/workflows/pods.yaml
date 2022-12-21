@@ -1,5 +1,6 @@
 name: Check pods in SA
-on: push
+on: 
+  push:
   schedule:
     - cron: "* */12 * * *"
 jobs:
