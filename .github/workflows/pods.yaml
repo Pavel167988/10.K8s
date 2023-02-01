@@ -18,18 +18,10 @@ jobs:
     steps:    
       - name: Check out the repo
         uses: actions/checkout@v2
-        
-      - name: Connect to host with proxy with out password     
-        run: |
-          git tag  
-        
-      - name: add tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.0
         with:
-          github_token: ${{ secrets.gh_token }}
-          tag_prefix: ""
-          
+          fetch-depth: 2
+      - run: git checkout HEAD^         
+
           
 
                     
