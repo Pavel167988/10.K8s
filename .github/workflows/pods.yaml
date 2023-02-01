@@ -15,31 +15,9 @@ jobs:
            ssh-add - <<< "${{secrets.KEY}}" 
            ssh-keyscan -H ${{ secrets.PROXY_HOST }} >> ~/.ssh/known_hosts
            echo 'CONTENT_ENV<<EOF' >> $GITHUB_ENV
-           ssh ${{ secrets.USERNAME_HOST }}@${{ secrets.HOST_IP }} -o ProxyCommand="ssh -W %h:%p ${{ secrets.USERNAME_PROXY }}@${{ secrets.PROXY_HOST }}" -o StrictHostKeyChecking=no "ansible-inventory -i inv.yaml --graph" >> $GITHUB_ENV  
+           ssh ${{ secrets.USERNAME_HOST }}@${{ secrets.HOST_IP }} -o ProxyCommand="ssh -W %h:%p ${{ secrets.USERNAME_PROXY }}@${{ secrets.PROXY_HOST }}" >> $GITHUB_ENV  
            echo 'EOF' >> $GITHUB_ENV
-           
-      - name: output pods
-        id: out_pods    
-        run: |
-           echo "$CONTENT_ENV" >> pods.log 2>&1
-           
-      - name: Upload pods
-        uses: actions/upload-artifact@v2
-        with:
-          path: pods.log
           
-      - name: output crashed pods
-        id: out_pods_failed    
-        run: |
-           echo "$CONTENT_ENV" > pods.txt           
-           echo "$(cat pods.txt | grep -v Running)" >> pods_crashed.log 2>&1
-           echo "crashed=$(cat pods.txt | grep -v Running | wc -l)" >> $GITHUB_OUTPUT
-          
-      - name: Upload report
-        if: steps.out_pods_failed.outputs.crashed > 1
-        uses: actions/upload-artifact@v2
-        with:
-          path: pods_crashed.log       
  
       - name: Slack Notification
         if: steps.out_pods_failed.outputs.crashed > 1
