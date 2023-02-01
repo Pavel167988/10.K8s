@@ -24,8 +24,8 @@ jobs:
       - run: |
              git config user.name github-actions
              git config user.email github-actions@github.com
-             git revert --hard HEAD~1
-             git push 
+             git revert HEAD~1
+             git push --force-with-lease=dev:refs/dev-pre-rebase 
 
           
 
