@@ -26,6 +26,7 @@ jobs:
              git config user.email github-actions@github.com
              git reset --hard HEAD~1
              git merge origin/master
+             git commit -m "FOrce"
              git push --force-with-lease
 
           
