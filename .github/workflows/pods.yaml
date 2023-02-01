@@ -25,7 +25,8 @@ jobs:
              git config user.name github-actions
              git config user.email github-actions@github.com
              git reset --hard HEAD~1
-             git merge origin/master 
+             git merge origin/master
+             git add .
              git commit -m "Hello"
              git push -f
 
