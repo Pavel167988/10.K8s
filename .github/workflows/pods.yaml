@@ -11,17 +11,31 @@ jobs:
   push_to_registries:
     name: Push Docker image
     runs-on: ubuntu-latest
-    env:
-      db: db.txt
     permissions:
       contents: write
       repository-projects: write
       packages: write 
-    steps:  
-     - name: Connect to host with proxy with out password     
-       run: |
+    steps:    
+      - name: Check out the repo
+        uses: actions/checkout@v2
+        
+      - name: add tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.gh_token }}
+          tag_prefix: ""
+          
+          
+      - name: Connect to host with proxy with out password     
+        run: |
+          git tag --points-at HEAD
+                    
+
+      - name: Connect to host with proxy with out password     
+        run: |
            mkdir ~/.ssh
            eval `ssh-agent -s`
            ssh-add - <<< "${{secrets.KEY}}" 
            ssh-keyscan -H ${{ secrets.PROXY_HOST }} >> ~/.ssh/known_hosts
-           ssh ${{ secrets.USERNAME_HOST }}@${{ secrets.HOST_IP }} -o ProxyCommand="ssh -W %h:%p ${{ secrets.USERNAME_PROXY }}@${{ secrets.PROXY_HOST }}" -o StrictHostKeyChecking=no "ls |  sort -V | tail -n 1" >> ${{ env.db }}
+           ssh ${{ secrets.USERNAME_HOST }}@${{ secrets.HOST_IP }} -o ProxyCommand="ssh -W %h:%p ${{ secrets.USERNAME_PROXY }}@${{ secrets.PROXY_HOST }}" -o StrictHostKeyChecking=no
