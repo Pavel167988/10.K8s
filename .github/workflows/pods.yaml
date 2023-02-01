@@ -21,7 +21,7 @@ jobs:
         
       - name: Connect to host with proxy with out password     
         run: |
-          git tag --sort=committerdate | grep -E '[0-9]' | tail -1 | cut -b 2-7  
+          git describe --tags $(git rev-list --tags --max-count=1)  
         
       - name: add tag
         id: tag_version
