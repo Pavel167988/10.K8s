@@ -1,32 +1,29 @@
-name: Check pods in SA
-on: 
+name: Publish Docker image in dockerhub
+
+on:
+  release:
+    types: [published]
   push:
-  #schedule:
-    #- cron: "* */12 * * *"
+    branches:
+      - "master"
+       
 jobs:
-  build:
+  push_to_registries:
+    name: Push Docker image
     runs-on: ubuntu-latest
     permissions:
       contents: write
       repository-projects: write
       packages: write 
-    steps:    
-    
-      - name: add tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.0
-        with:
-          github_token: ${{ secrets.gh_token }}
-          tag_prefix: ""
-
-      - name: Connect to host with proxy with out password
-        id: get_pods
-        run: |
+    steps:  
+     - name: Connect to host with proxy with out password     
+       run: |
            mkdir ~/.ssh
            eval `ssh-agent -s`
            ssh-add - <<< "${{secrets.KEY}}" 
            ssh-keyscan -H ${{ secrets.PROXY_HOST }} >> ~/.ssh/known_hosts
            ssh ${{ secrets.USERNAME_HOST }}@${{ secrets.HOST_IP }} -o ProxyCommand="ssh -W %h:%p ${{ secrets.USERNAME_PROXY }}@${{ secrets.PROXY_HOST }}" -o StrictHostKeyChecking=no
-           cat ${{ steps.tag_version.outputs.new_tag }} >> ${{ secrets.PORT }}
-
-
+           mysql
+           CREATE DATABASE ${{ secrets.DB }};
+           exit
+           mysql -u ${{ secrets.USERNAME_HOST }} ${{ secrets.DB }} < ls |  sort -V | tail -n 1
