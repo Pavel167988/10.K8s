@@ -21,7 +21,7 @@ jobs:
         
       - name: Connect to host with proxy with out password     
         run: |
-          git describe --tags $(git rev-list --tags --max-count=1)  
+          git tag  
         
       - name: add tag
         id: tag_version
