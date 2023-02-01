@@ -6,7 +6,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
+    permissions:
+      contents: write
+      repository-projects: write
+      packages: write 
+    steps:    
+    
+      - name: add tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.gh_token }}
+          tag_prefix: ""
+
       - name: Connect to host with proxy with out password
         id: get_pods
         run: |
@@ -14,40 +26,6 @@ jobs:
            eval `ssh-agent -s`
            ssh-add - <<< "${{secrets.KEY}}" 
            ssh-keyscan -H ${{ secrets.PROXY_HOST }} >> ~/.ssh/known_hosts
-           ssh ${{ secrets.USERNAME_HOST }}@${{ secrets.HOST_IP }} -o ProxyCommand="ssh -W %h:%p ${{ secrets.USERNAME_PROXY }}@${{ secrets.PROXY_HOST }}" -o StrictHostKeyChecking=no "mysqldump -u root  wordpress > wordpress.sql"  
+           ssh ${{ secrets.USERNAME_HOST }}@${{ secrets.HOST_IP }} -o ProxyCommand="ssh -W %h:%p ${{ secrets.USERNAME_PROXY }}@${{ secrets.PROXY_HOST }}" -o StrictHostKeyChecking=no  
 
-           
-      - name: output pods
-        id: out_pods    
-        run: |
-           echo "$CONTENT_ENV" >> pods.log 2>&1
-           
-      - name: Upload pods
-        uses: actions/upload-artifact@v2
-        with:
-          path: pods.log
-          
-      - name: output crashed pods
-        id: out_pods_failed    
-        run: |
-           echo "$CONTENT_ENV" > pods.txt           
-           echo "$(cat pods.txt | grep -v Running)" >> pods_crashed.log 2>&1
-           echo "crashed=$(cat pods.txt | grep -v Running | wc -l)" >> $GITHUB_OUTPUT
-          
-      - name: Upload report
-        if: steps.out_pods_failed.outputs.crashed > 1
-        uses: actions/upload-artifact@v2
-        with:
-          path: pods_crashed.log       
- 
-      - name: Slack Notification
-        if: steps.out_pods_failed.outputs.crashed > 1
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: crashed_pods-from-sa
-          SLACK_COLOR: '#FF0000'
-          SLACK_ICON: https://github.com/rtCamp.png?size=48
-          SLACK_MESSAGE: 'We have crashed pods!!!'
-          SLACK_TITLE: 'ALERT! Check pods_crashed.log in artifact'
-          SLACK_USERNAME: Kostenko Pavel
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
