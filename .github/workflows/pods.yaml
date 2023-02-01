@@ -32,7 +32,7 @@ jobs:
           fetch-depth: 2
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
-           git describe --tags
+           git describe --tags --always
            
 
 
