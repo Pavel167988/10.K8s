@@ -32,7 +32,11 @@ jobs:
           fetch-depth: 2
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - run: 
-           git describe --abbrev=0 --tags 'git rev-list --tags --skip=1  --max-count=1'
+           date > date.txt
+           git add --all
+           git commit -am "Add web interface"
+           git push
+           
 
 
           
