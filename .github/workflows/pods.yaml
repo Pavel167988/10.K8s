@@ -31,9 +31,8 @@ jobs:
         with:
           fetch-depth: 2
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-             git tag >> txt.txt
-             cat txt.txt
+      - run: 
+           git describe --abbrev=0 --tags 'git rev-list --tags --skip=1  --max-count=1'
 
 
           
