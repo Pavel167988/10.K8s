@@ -23,7 +23,7 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.0
         with:
           github_token: ${{ secrets.gh_token }}
-          tag_prefix: ^(1|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)
+          tag_prefix: "0.1.0"
           
           
       - name: Check out the repo
