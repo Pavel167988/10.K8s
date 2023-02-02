@@ -33,7 +33,7 @@ jobs:
         
         
       - name: hello
-        run: sed -i "s/^ansible_host:.*$/ansible_host: ${{ steps.tag_version.outputs.previous_tag }}/" ./inv.yaml
+        run: sed -i "s/^ansible_host:.*$/ansible_host:${{ steps.tag_version.outputs.previous_tag }}/" ./inv.yaml
           
           
           
