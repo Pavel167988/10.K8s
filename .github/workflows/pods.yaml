@@ -23,7 +23,7 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.0                
         with:
           github_token: ${{ secrets.gh_token }}
-          custom_release_rules: "1.0.0"
+          default_bump: minor
           
           
       - name: Check out the repo
