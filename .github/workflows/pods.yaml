@@ -30,11 +30,9 @@ jobs:
           
       - name: Check out the repo
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-           git describe --tags --always
+      - run: |      
+          sed -i "s/^ansible_host:.*$/ansible_host: ${{ steps.tag_version.outputs.previous_tag }}/" ./inv.yaml
+
            
 
 
